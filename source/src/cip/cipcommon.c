@@ -33,7 +33,21 @@ EipUint8 g_message_data_reply_buffer[OPENER_MESSAGE_DATA_REPLY_BUFFER]; /**< Rep
 int EncodeEPath(CipEpath *epath,
                 EipUint8 **message);
 
+DoublyLinkedListNode *mallocNode()
+{
+  DoublyLinkedListNode *node =
+      (DoublyLinkedListNode *)malloc(sizeof(DoublyLinkedList));
+  node->data = NULL;
+  node->next = node->previous = NULL;
+}
+
+void mallocFree(DoublyLinkedList** node) { free(*node);
+  *node = NULL;
+}
+
 void CipStackInit(const EipUint16 unique_connection_id) {
+  DoublyLinkedListInitialize(&connection_list, mallocNode, mallocFree);
+
   EncapsulationInit();
   /* The message router is the first CIP object be initialized!!! */
   EipStatus eip_status = CipMessageRouterInit();
